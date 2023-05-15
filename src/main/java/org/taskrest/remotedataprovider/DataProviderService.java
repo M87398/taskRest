@@ -1,12 +1,16 @@
 package org.taskrest.remotedataprovider;
 
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.taskrest.user.UserDao;
 
 @Service
+@Slf4j
 public class DataProviderService implements DataProvider {
     @Value("${github.url}")
     private String githubUrl;
@@ -17,8 +21,13 @@ public class DataProviderService implements DataProvider {
     }
 
     public UserDao getUserData(String login) {
-        RemoteUserData user = restTemplate.getForObject(githubUrl + login, RemoteUserData.class);
-        return user == null ? null : mapToUserDao(user);
+        try {
+            RemoteUserData user = restTemplate.getForObject(githubUrl + login, RemoteUserData.class);
+            return user == null ? null : mapToUserDao(user);
+        }catch(RestClientException exception){
+           log.error("cannot read remote data", exception.getMessage());
+           return null;
+        }
     }
 
     private UserDao mapToUserDao(RemoteUserData user) {

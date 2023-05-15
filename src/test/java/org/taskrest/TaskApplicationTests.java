@@ -13,5 +13,4 @@ class TaskApplicationTests {
 		TaskApplication taskApplication= new TaskApplication();
 		assertThat(taskApplication).isNotNull();
 	}
-
 }
