@@ -2,23 +2,23 @@ package org.taskrest.remotedataprovider;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.taskrest.user.UserDao;
 
-@Component
-public class DataProviderImpl implements DataProvider {
+@Service
+public class DataProviderService implements DataProvider {
     @Value("${github.url}")
     private String githubUrl;
     private final RestTemplate restTemplate;
 
-    public DataProviderImpl(RestTemplate restTemplate) {
+    public DataProviderService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     public UserDao getUserData(String login) {
         RemoteUserData user = restTemplate.getForObject(githubUrl + login, RemoteUserData.class);
-        UserDao userDao = mapToUserDao(user);
-        return userDao;
+        return user == null ? null : mapToUserDao(user);
     }
 
     private UserDao mapToUserDao(RemoteUserData user) {

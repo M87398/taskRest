@@ -14,7 +14,7 @@ public class RemoteUserData implements Serializable {
     @JsonProperty("avatar_url")
     private String avatarUrl;
     @JsonProperty("created_at")
-    private String createdAt;//todo consider LocalDateTime
+    private String createdAt;
     private Integer followers;
     @JsonProperty("public_repos")
     private Integer publicRepos;
